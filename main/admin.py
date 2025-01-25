@@ -27,8 +27,15 @@ class CountryAdmin(admin.ModelAdmin):
 class ApplicationInline(admin.TabularInline):
     model = models.Application
     extra = 0
-    fields = ('fullname', 'phone_number', 'email', 'extra_description')
+    can_delete = False
+    fields = ('id', 'fullname', 'phone_number', 'email', 'extra_description')
     readonly_fields = ('fullname', 'phone_number', 'email', 'extra_description')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(models.Vacancy)
