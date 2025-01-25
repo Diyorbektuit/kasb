@@ -22,7 +22,7 @@ env.read_env(".env")
 
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env.str("SECRET_KEY")
-HOST_URL = env.str('HOST_URL')
+HOST_URL = env.str('HOST_URL', default='https://kasb001.pythonanywhere.com/')
 
 ALLOWED_HOSTS = ["*"]
 
