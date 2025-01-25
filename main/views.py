@@ -30,3 +30,8 @@ class PostDetailView(generics.RetrieveAPIView):
     serializer_class = serializer.PostDetailSerializer
     lookup_field = 'slug'
 
+
+class FormCreateView(generics.CreateAPIView):
+    queryset = models.Form.objects.all()
+    serializer_class = serializer.FormSerializer
+

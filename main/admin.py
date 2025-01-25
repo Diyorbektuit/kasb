@@ -37,3 +37,9 @@ class CountryAdmin(admin.ModelAdmin):
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('id', 'title_eng', 'poster', 'slug')
     readonly_fields = ('slug', )
+
+
+@admin.register(models.Form)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'fullname', 'phone_number', 'description')
+    search_fields = ('fullname', 'phone_number')

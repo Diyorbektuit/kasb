@@ -119,3 +119,21 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def get_text_ru(self, obj):
         return obj.text_ru.replace('src="/media/', f'src="{settings.HOST_URL}/media/')
 
+
+# Form serializer
+class FormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Form
+        fields = (
+            'fullname',
+            'phone_number',
+            'description',
+        )
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'fullname': instance.fullname,
+            'phone_number': instance.phone_number,
+            'description': instance.description,
+        }
