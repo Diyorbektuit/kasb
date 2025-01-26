@@ -22,7 +22,7 @@ class Vacancy(BaseModel):
     max_salary = models.IntegerField()
 
     def __str__(self):
-        return str(self.id)
+        return self.vacancies_languages.first().title if self.vacancies_languages.first().title is not None else str(self.id)
 
 
 class VacancyLanguage(BaseModel):

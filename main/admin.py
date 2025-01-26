@@ -46,11 +46,17 @@ class MultiLanguageAdmin(admin.ModelAdmin):
         return getattr(translation, 'value', getattr(translation, 'name', getattr(translation, 'title', "N/A")))
 
 # Post Admin
-class PostLanguageInline(admin.TabularInline):
+class PostLanguageInline(admin.StackedInline):
     model = models.PostLanguage
     extra = 1
     fields = ['language', 'title', 'short_description', 'text']
     readonly_fields = ['language']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj):
+        return False
 
 @admin.register(models.Post)
 class PostAdmin(MultiLanguageAdmin):

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 
 from main.models import Post, Form
-from settings.models import Language
+from settings.models import Language, GeneralInformation
 from vacancy.models import Vacancy, Application
 
 
@@ -240,3 +240,66 @@ class FormSerializer(serializers.ModelSerializer):
             'phone_number': instance.phone_number,
             'description': instance.description,
         }
+
+
+# GeneralInformation admin
+class GeneralInformationSerializer(serializers.ModelSerializer):
+    headline = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+    opening_hours = serializers.SerializerMethodField()
+
+    def get_headline(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            information_language = obj.languages.filter(language__code=code)
+            if information_language.exists():
+                return information_language.first().headline
+            return None
+        return None
+
+    def get_description(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            information_language = obj.languages.filter(language__code=code)
+            if information_language.exists():
+                return information_language.first().description
+            return None
+        return None
+
+    def get_address(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            information_language = obj.languages.filter(language__code=code)
+            if information_language.exists():
+                return information_language.first().address
+            return None
+        return None
+
+    def get_opening_hours(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            information_language = obj.languages.filter(language__code=code)
+            if information_language.exists():
+                return information_language.first().opening_hours
+            return None
+        return None
+
+    class Meta:
+        model = GeneralInformation
+        fields = (
+            'email',
+            'phone',
+            'telegram',
+            'instagram',
+            'facebook',
+            'youtube',
+            'logo',
+            'second_logo',
+            'favicon',
+            'headline',
+            'description',
+            'address',
+            'opening_hours',
+        )
+

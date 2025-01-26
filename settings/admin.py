@@ -16,6 +16,13 @@ class CategoryLanguageInline(admin.TabularInline):
     fields = ('language', 'name',)
     readonly_fields = ('language',)
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(models.Category)
 class CategoryAdmin(MultiLanguageAdmin):
     list_display = ('id', 'order')
@@ -27,9 +34,16 @@ class CategoryAdmin(MultiLanguageAdmin):
 # Company Admin
 class CompanyLanguageInline(admin.TabularInline):
     model = models.CompanyLanguage
-    extra = 1  # Bo'sh joylar yaratish
+    extra = 0
     fields = ['language', 'name']
-    readonly_fields = ['language']  # Tillarni faqat o‘qish uchun qoldiramiz
+    readonly_fields = ['language']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(models.Company)
 class CompanyAdmin(MultiLanguageAdmin):
@@ -84,8 +98,8 @@ class GeneralInformationAdmin(MultiLanguageAdmin):
     translation_fk_field = 'general_information'
     inlines = (GeneralInformationLanguageInline, )
 
-    def has_add_permission(self, request, obj=None):
-        return False
+    def get_translation_field_value(self, translation):
+        return translation.headline or "N/A"
 
     def has_delete_permission(self, request, obj=None):
         return False

@@ -19,7 +19,7 @@ class Post(BaseModel):
     poster = models.ImageField(upload_to='post_images')
 
     def __str__(self):
-        return str(self.id)
+        return self.posts_languages.first().title if self.posts_languages.first().title is not None else str(self.id)
 
 
 class PostLanguage(BaseModel):

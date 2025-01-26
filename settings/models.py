@@ -52,7 +52,7 @@ class Category(BaseModel):
     order = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return str(self.id)
+        return self.categories_languages.first().name if self.categories_languages.first().name is not None else str(self.id)
 
 
 class CategoryLanguage(BaseModel):
@@ -68,7 +68,7 @@ class Company(BaseModel):
     image = models.ImageField(upload_to='company_images')
 
     def __str__(self):
-        return str(self.id)
+        return self.companies_languages.first().name if self.companies_languages.first().name is not None else str(self.id)
 
 
 class CompanyLanguage(BaseModel):
@@ -82,8 +82,9 @@ class CompanyLanguage(BaseModel):
 
 class Country(BaseModel):
     icon = models.ImageField(upload_to='country-images/', null=True, blank=True)
+
     def __str__(self):
-        return str(self.id)
+        return self.countries_languages.first().name if self.countries_languages.first().name is not None else str(self.id)
 
 
 class CountryLanguage(BaseModel):

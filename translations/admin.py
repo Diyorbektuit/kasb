@@ -3,8 +3,6 @@ from django.contrib import admin
 from main.admin import MultiLanguageAdmin
 from translations import models
 # Register your models here.
-
-# Vacancy Admin
 class TranslationLanguageInline(admin.TabularInline):
     model = models.TranslationLanguage
     extra = 0
