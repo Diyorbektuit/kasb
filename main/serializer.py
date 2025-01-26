@@ -4,6 +4,7 @@ from django.conf import settings
 from main.models import Post, Form
 from settings.models import Language, GeneralInformation
 from vacancy.models import Vacancy, Application
+from translations.models import Translation, Group
 
 
 # Language serializer
@@ -303,3 +304,31 @@ class GeneralInformationSerializer(serializers.ModelSerializer):
             'opening_hours',
         )
 
+
+# Translations
+class TranslationsSerializer(serializers.ModelSerializer):
+    value = serializers.SerializerMethodField()
+
+    def get_value(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            translation_language = obj.languages.filter(language__code=code)
+            if translation_language.exists():
+                return translation_language.first().value
+            return None
+        return None
+
+    class Meta:
+        model = Translation
+        fields = (
+            'key',
+            'value'
+        )
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'name',
+            'sub_text'
+        )

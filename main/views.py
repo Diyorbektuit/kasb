@@ -7,6 +7,7 @@ from rest_framework.filters import SearchFilter
 from main import models, serializer, pagination
 from vacancy.models import Vacancy, Application
 from settings.models import GeneralInformation
+from translations.models import Translation, Group
 
 
 # Create your views here.
@@ -119,3 +120,44 @@ class GeneralInformationView(generics.RetrieveAPIView):
         ])
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class TranslationView(generics.ListAPIView):
+    queryset = Translation.objects.all()
+    serializer_class = serializer.TranslationsSerializer
+
+    def get_queryset(self):
+        group = self.request.query_params.get("group", None)
+
+        group = Group.objects.filter(name=group)
+        if group.exists():
+            return self.queryset.filter(group=group.first())
+        return self.queryset
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("language", None)
+        return context
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'language',
+                openapi.IN_QUERY,
+                description="language codeni yozasiz",
+                type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                'group',
+                openapi.IN_QUERY,
+                description="group nomini yozasiz",
+                type=openapi.TYPE_STRING
+            )
+        ])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class GroupListView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = serializer.GroupSerializer
