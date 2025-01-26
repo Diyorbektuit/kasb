@@ -1,100 +1,139 @@
-import json
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from main import models
+from main.models import Post, PostLanguage
+from settings.models import (Country, Company, Category, CategoryLanguage, CompanyLanguage, CountryLanguage, Language ,
+                             GeneralInformation, GeneralInformationLanguage)
+from vacancy.models import Vacancy, VacancyLanguage
+from translations.models import Translation, TranslationLanguage
 
 
-@receiver(post_save, sender=models.Language)
+@receiver(post_save, sender=Language)
 def create_category_languages(sender, instance, created, **kwargs):
     if created:
-        categories = models.Category.objects.all()
-        companies = models.Company.objects.all()
-        countries = models.Country.objects.all()
-        vacancies = models.Vacancy.objects.all()
-        posts = models.Post.objects.all()
+        categories = Category.objects.all()
+        companies = Company.objects.all()
+        countries = Country.objects.all()
+        vacancies = Vacancy.objects.all()
+        posts = Post.objects.all()
+        translations = Translation.objects.all()
+
+        general_information = GeneralInformation.objects.first()
+        if general_information:
+            GeneralInformationLanguage.objects.create(
+                language=instance,
+                general_information=general_information
+            )
+
+        for translation in translations:
+            TranslationLanguage.objects.create(
+                language=instance,
+                translation=translation,
+            )
+
+
         for category in categories:
-            models.CategoryLanguage.objects.create(
+            CategoryLanguage.objects.create(
                 language=instance,
                 category=category,
             )
 
         for company in companies:
-            models.CompanyLanguage.objects.create(
+            CompanyLanguage.objects.create(
                 language=instance,
                 company=company,
             )
 
         for country in countries:
-            models.CountryLanguage.objects.create(
+            CountryLanguage.objects.create(
                 language=instance,
                 country=country,
             )
 
         for vacancy in vacancies:
-            models.VacancyLanguage.objects.create(
+            VacancyLanguage.objects.create(
                 language=instance,
                 vacancy=vacancy,
             )
 
         for post in posts:
-            models.PostLanguage.objects.create(
+            PostLanguage.objects.create(
                 language=instance,
                 post=post,
             )
 
 
-@receiver(post_save, sender=models.Category)
+@receiver(post_save, sender=Category)
 def create_category_languages_for_new_category(sender, instance, created, **kwargs):
     if created:
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
-            models.CategoryLanguage.objects.create(
+            CategoryLanguage.objects.create(
                 language=language,
                 category=instance,
             )
 
 
-@receiver(post_save, sender=models.Country)
+@receiver(post_save, sender=Country)
 def create_category_languages_for_new_category(sender, instance, created, **kwargs):
     if created:
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
-            models.CountryLanguage.objects.create(
+            CountryLanguage.objects.create(
                 language=language,
                 country=instance,
             )
 
 
-@receiver(post_save, sender=models.Company)
+@receiver(post_save, sender=Company)
 def create_category_languages_for_new_category(sender, instance, created, **kwargs):
     if created:
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
-            models.CompanyLanguage.objects.create(
+            CompanyLanguage.objects.create(
                 language=language,
                 company=instance,
             )
 
 
-@receiver(post_save, sender=models.Vacancy)
+@receiver(post_save, sender=Vacancy)
 def create_category_languages_for_new_category(sender, instance, created, **kwargs):
     if created:
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
-            models.VacancyLanguage.objects.create(
+            VacancyLanguage.objects.create(
                 language=language,
                 vacancy=instance,
             )
 
 
-@receiver(post_save, sender=models.Post)
+@receiver(post_save, sender=Post)
 def create_category_languages_for_new_category(sender, instance, created, **kwargs):
     if created:
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
-            models.PostLanguage.objects.create(
+            PostLanguage.objects.create(
                 language=language,
                 post=instance,
+            )
+
+
+@receiver(post_save, sender=GeneralInformation)
+def create_category_languages_for_new_category(sender, instance, created, **kwargs):
+    if created:
+        languages = Language.objects.all()
+        for language in languages:
+            GeneralInformationLanguage.objects.create(
+                language=language,
+                general_information=instance,
+            )
+
+@receiver(post_save, sender=Translation)
+def create_category_languages_for_new_category(sender, instance, created, **kwargs):
+    if created:
+        languages = Language.objects.all()
+        for language in languages:
+            TranslationLanguage.objects.create(
+                language=language,
+                translation=instance,
             )

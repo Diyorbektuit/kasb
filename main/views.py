@@ -5,6 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
 from main import models, serializer, pagination
+from vacancy.models import Vacancy, Application
+
 
 # Create your views here.
 class LanguageListView(generics.ListAPIView):
@@ -13,7 +15,7 @@ class LanguageListView(generics.ListAPIView):
 
 
 class VacancyListView(generics.ListAPIView):
-    queryset = models.Vacancy.objects.all()
+    queryset = Vacancy.objects.all()
     serializer_class = serializer.VacancySerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('vacancies_languages__title',)
@@ -39,7 +41,7 @@ class VacancyListView(generics.ListAPIView):
 
 
 class ApplicationCreateView(generics.CreateAPIView):
-    queryset = models.Application.objects.all()
+    queryset = Application.objects.all()
     serializer_class = serializer.ApplicationSerializer
 
 

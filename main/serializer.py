@@ -1,12 +1,15 @@
 from rest_framework import serializers
 from django.conf import settings
 
-from main import models
+from main.models import Post, Form
+from settings.models import Language
+from vacancy.models import Vacancy, Application
+
 
 # Language serializer
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Language
+        model = Language
         fields = (
             'name',
             'code',
@@ -97,7 +100,7 @@ class VacancySerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = models.Vacancy
+        model = Vacancy
         fields = [
             'category',
             'company',
@@ -108,13 +111,14 @@ class VacancySerializer(serializers.ModelSerializer):
             'description',
             'job_schedule',
             'work_type',
-            'city'
+            'city',
+            'created_at'
         ]
 
 # Application serializer
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Application
+        model = Application
         fields = (
             'fullname',
             'phone_number',
@@ -167,7 +171,7 @@ class PostListSerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = models.Post
+        model = Post
         fields = (
             'id',
             'poster',
@@ -209,7 +213,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = models.Post
+        model = Post
         fields = (
             'id',
             'title',
@@ -222,7 +226,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 # Form serializer
 class FormSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Form
+        model = Form
         fields = (
             'fullname',
             'phone_number',

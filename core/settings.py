@@ -41,6 +41,9 @@ DJANGO_APPS = [
 
 CUSTOM_APPS = [
     'main.apps.MainConfig',
+    'settings.apps.SettingsConfig',
+    'vacancy.apps.VacancyConfig',
+    'translations.apps.TranslationsConfig',
 ]
 
 THIRD_PARTY_APPS = [
