@@ -3,42 +3,112 @@ from django.conf import settings
 
 from main import models
 
-
-# Category serializer
-class CategorySerializer(serializers.ModelSerializer):
+# Language serializer
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Category
-        fields = ['name_uz', 'name_eng', 'name_ru']
-
-
-# Company serializer
-class CompanySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Company
-        fields = ['name_uz', 'name_eng', 'name_ru', 'image']
-
-
-# Country serializer
-class CountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Country
-        fields = ['name_uz', 'name_eng', 'name_ru']
-
+        model = models.Language
+        fields = (
+            'name',
+            'code',
+            'icon'
+        )
 
 # Vacancy serializer
 class VacancySerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    company = CompanySerializer()
-    country = CountrySerializer()
+    category = serializers.SerializerMethodField()
+    company = serializers.SerializerMethodField()
+    country = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    job_schedule = serializers.SerializerMethodField()
+    work_type = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+
+    def get_category(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            category_language = obj.category.categories_languages.filter(language__code=code)
+            if category_language.exists():
+                return category_language.first().name
+            return None
+        return None
+
+    def get_company(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            company_language = obj.company.companies_languages.filter(language__code=code)
+            if company_language.exists():
+                return company_language.first().name
+            return None
+        return None
+
+    def get_country(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            country_language = obj.country.countries_languages.filter(language__code=code)
+            if country_language.exists():
+                return country_language.first().name
+            return None
+        return None
+
+    def get_title(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            vacancy_language = obj.vacancies_languages.filter(language__code=code)
+            if vacancy_language.exists():
+                return vacancy_language.first().title
+            return None
+        return None
+
+    def get_description(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            vacancy_language = obj.vacancies_languages.filter(language__code=code)
+            if vacancy_language.exists():
+                return vacancy_language.first().description
+            return None
+        return None
+
+    def get_job_schedule(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            vacancy_language = obj.vacancies_languages.filter(language__code=code)
+            if vacancy_language.exists():
+                return vacancy_language.first().job_schedule
+            return None
+        return None
+
+    def get_work_type(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            vacancy_language = obj.vacancies_languages.filter(language__code=code)
+            if vacancy_language.exists():
+                return vacancy_language.first().work_type
+            return None
+        return None
+
+    def get_city(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            vacancy_language = obj.vacancies_languages.filter(language__code=code)
+            if vacancy_language.exists():
+                return vacancy_language.first().city
+            return None
+        return None
 
     class Meta:
         model = models.Vacancy
         fields = [
-            'title_uz', 'title_eng', 'title_ru',
-            'description_uz', 'description_eng', 'description_ru',
-            'category', 'company', 'min_salary', 'max_salary',
-            'job_schedule', 'work_location', 'country', 'city_uz',
-            'city_eng', 'city_ru'
+            'category',
+            'company',
+            'country',
+            'min_salary',
+            'max_salary',
+            'title',
+            'description',
+            'job_schedule',
+            'work_type',
+            'city'
         ]
 
 # Application serializer
@@ -62,62 +132,91 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'phone_number': instance.phone_number,
             'email': instance.email,
             'extra_description': instance.extra_description,
-            'country': {
-                'name_uz': instance.country.name_uz,
-                'name_eng': instance.country.name_eng,
-                'name_ru': instance.country.name_ru
-            },
-            'vacancy': {
-                'title_uz': instance.vacancy.title_uz,
-                'title_eng': instance.vacancy.title_eng,
-                'title_ru': instance.vacancy.title_ru
-            }
         }
 
 # Post Serializers
 class PostListSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    short_description = serializers.SerializerMethodField()
+
+    def get_title(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().title
+            return None
+        return None
+
+    def get_short_description(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().short_description
+            return None
+        return None
+
+    def get_text(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().text
+            return None
+        return None
+
     class Meta:
         model = models.Post
         fields = (
-            'slug',
-            'title_uz',
-            'title_eng',
-            'title_ru',
+            'id',
             'poster',
-            'short_description_uz',
-            'short_description_eng',
-            'short_description_ru',
+            'title',
+            'short_description',
         )
+
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    text_uz = serializers.SerializerMethodField()
-    text_eng = serializers.SerializerMethodField()
-    text_ru = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    short_description = serializers.SerializerMethodField()
+
+    def get_title(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().title
+            return None
+        return None
+
+    def get_short_description(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().short_description
+            return None
+        return None
+
+    def get_text(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            post_language = obj.posts_languages.filter(language__code=code)
+            if post_language.exists():
+                return post_language.first().text.replace('src="/media/', f'src="{settings.HOST_URL}/media/')
+            return None
+        return None
 
     class Meta:
         model = models.Post
         fields = (
-            'slug',
-            'title_uz',
-            'title_eng',
-            'title_ru',
+            'id',
+            'title',
             'poster',
-            'short_description_uz',
-            'short_description_eng',
-            'short_description_ru',
-            'text_uz',
-            'text_eng',
-            'text_ru'
+            'short_description',
+            'text',
         )
-
-    def get_text_uz(self, obj):
-        return obj.text_uz.replace('src="/media/', f'src="{settings.HOST_URL}/media/')
-
-    def get_text_eng(self, obj):
-        return obj.text_eng.replace('src="/media/', f'src="{settings.HOST_URL}/media/')
-
-    def get_text_ru(self, obj):
-        return obj.text_ru.replace('src="/media/', f'src="{settings.HOST_URL}/media/')
 
 
 # Form serializer

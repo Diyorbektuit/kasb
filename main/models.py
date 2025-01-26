@@ -16,111 +16,120 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Category(BaseModel):
-    name_uz = models.CharField(_("Name_uz"), max_length=512)
-    name_eng = models.CharField(_("Name_eng"), max_length=512)
-    name_ru = models.CharField(_("Name_ru"), max_length=512)
-    order = models.PositiveIntegerField(_("Order"), default=1)
+class Language(BaseModel):
+    name = models.CharField(max_length=123)
+    code = models.CharField(max_length=15, unique=True)
+    icon = models.ImageField(upload_to='language_images/', null=True, blank=True)
 
     def __str__(self):
-        return self.name_eng
+        return self.name
+
+
+class Category(BaseModel):
+    order = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class CategoryLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='categories_languages')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='categories_languages')
+    name = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.language.name}, {self.name}"
 
 
 class Company(BaseModel):
-    name_uz = models.CharField(_("Name_uz"), max_length=512)
-    name_eng = models.CharField(_("Name_eng"), max_length=512)
-    name_ru = models.CharField(_("Name_ru"), max_length=512)
     image = models.ImageField(upload_to='company_images')
 
     def __str__(self):
-        return self.name_eng
+        return str(self.id)
+
+
+class CompanyLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='companies_languages')
+    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='companies_languages')
+    name = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.language.name}, {self.name}"
 
 
 class Country(BaseModel):
-    name_uz = models.CharField(_("Name_uz"), max_length=512)
-    name_eng = models.CharField(_("Name_eng"), max_length=512)
-    name_ru = models.CharField(_("Name_ru"), max_length=512)
+    icon = models.ImageField(upload_to='country-images/', null=True, blank=True)
+    def __str__(self):
+        return str(self.id)
+
+
+class CountryLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='countries_languages')
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='countries_languages')
+    name = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.name_eng
+        return f"{self.language.name}, {self.name}"
 
 
 class Vacancy(BaseModel):
-    title_uz = models.CharField(_("Title_uz"), max_length=512)
-    title_eng = models.CharField(_("Title_eng"), max_length=512)
-    title_ru = models.CharField(_("Title_ru"), max_length=512)
-    description_uz = models.TextField(_("Description_uz"), null=True, blank=True)
-    description_eng = models.TextField(_("Description_eng"), null=True, blank=True)
-    description_ru = models.TextField(_("Description_ru"), null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="vacancies")
     company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="vacancies")
-    min_salary = models.IntegerField(_("Min_salary"))
-    max_salary = models.IntegerField(_("Max_salary"))
-    job_schedule = models.CharField(_("Job_schedule"), max_length=30, choices=
-        [('full_time', _('Full-time')),
-         ('part_time', _('Part-time')),
-         ('shift', _('Shift')),
-         ('flexible', _('Flexible'))])
-    work_location = models.CharField(
-        _("Job_location"),
-        choices=[('office', _('Office')),
-                 ('remote', _('Remote')),
-                 ('hybrid', _('Hybrid'))],
-        max_length=30
-    )
     country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='vacancies')
-    city_uz = models.CharField(_("City_uz"), max_length=256)
-    city_eng = models.CharField(_("City_eng"), max_length=256)
-    city_ru = models.CharField(_("City_ru"), max_length=256)
+    min_salary = models.IntegerField()
+    max_salary = models.IntegerField()
 
     def __str__(self):
-        return self.title_eng
+        return str(self.id)
+
+
+class VacancyLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='vacancies_languages')
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='vacancies_languages')
+    title = models.CharField(max_length=512, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    job_schedule = models.CharField(max_length=512, null=True, blank=True)
+    work_type = models.CharField(max_length=512, null=True, blank=True)
+    city = models.CharField(max_length=256, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.language.name}, {self.title}"
 
 
 class Application(BaseModel):
-    fullname = models.CharField(_('Fullname'), max_length=256)
-    phone_number = models.CharField(_('Phone_number'), max_length=512)
-    email = models.EmailField(_('Email'))
+    fullname = models.CharField(max_length=256)
+    phone_number = models.CharField( max_length=512)
+    email = models.EmailField()
     country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='applications')
     vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='applications')
-    extra_description = models.TextField(_('Extra_description'))
+    extra_description = models.TextField()
 
     def __str__(self):
         return self.fullname
 
 
 class Post(BaseModel):
-    title_uz = models.CharField(_('title_uz'), max_length=512)
-    title_eng = models.CharField(_('title_eng'), max_length=512)
-    title_ru = models.CharField(_('title_ru'), max_length=512)
     poster = models.ImageField(upload_to='post_images')
-    short_description_uz = models.TextField(_('short_description_uz'))
-    short_description_eng = models.TextField(_('short_description_eng'))
-    short_description_ru = models.TextField(_('short_description_ru'))
-    text_uz = RichTextUploadingField(_('text_uz'))
-    text_eng = RichTextUploadingField(_('text_eng'))
-    text_ru = RichTextUploadingField(_('text_ru'))
-    slug = models.SlugField(_('slug'), unique=True)
-
-    def unique_slugify(self):
-        slug = slugify(self.title_eng)
-        while Post.objects.filter(slug=slug).exists():
-            slug = f"{slug}-{random.randint(100, 999)}"
-        return slug
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = self.unique_slugify()
-        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.title_eng
+        return str(self.id)
+
+
+class PostLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='posts_languages')
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='posts_languages')
+    title = models.CharField(max_length=512, null=True, blank=True)
+    short_description = models.TextField(null=True, blank=True)
+    text = RichTextUploadingField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.language.name}, {self.title}"
 
 
 class Form(BaseModel):
-    fullname = models.CharField(_('fullname'), max_length=512)
-    phone_number = models.CharField(_('Phone_number'), max_length=512)
-    description = models.TextField(_("Description"))
+    fullname = models.CharField(max_length=512)
+    phone_number = models.CharField(max_length=512)
+    description = models.TextField()
 
     def __str__(self):
         return self.fullname
