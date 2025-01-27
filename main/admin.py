@@ -17,7 +17,7 @@ class MultiLanguageAdmin(admin.ModelAdmin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        languages = models.Language.objects.all()
+        languages = Language.objects.all()
         for language in languages:
             field_name = f'translation_{language.code}'
             self.list_display += (field_name,)

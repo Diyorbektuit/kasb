@@ -1,8 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from ckeditor_uploader.fields import RichTextUploadingField
-
-from settings.models import Language, Country
 from vacancy.models import Vacancy
 
 
@@ -20,7 +17,7 @@ class BaseModel(models.Model):
 class Form(BaseModel):
     fullname = models.CharField(max_length=512)
     phone_number = models.CharField(max_length=512)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.fullname
@@ -28,11 +25,18 @@ class Form(BaseModel):
 
 class Application(BaseModel):
     fullname = models.CharField(max_length=256)
-    phone_number = models.CharField( max_length=512)
+    gender = models.CharField(max_length=256, null=True, blank=True)
+    marital_status = models.CharField(max_length=123, null=True, blank=True)
+    birthday_data = models.DateTimeField(null=True, blank=True)
+    region = models.CharField(max_length=123, null=True, blank=True)
+    phone_number = models.CharField(max_length=512)
     email = models.EmailField()
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='applications')
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='applications')
-    extra_description = models.TextField()
+    languages = models.CharField(max_length=1024, null=True, blank=True)
+    country = models.CharField(max_length=256, null=True, blank=True)
+    job_type = models.CharField(max_length=512, null=True, blank=True)
+    experience = models.CharField(max_length=256, null=True, blank=True)
+    level_of_education = models.CharField(max_length=1024, null=True, blank=True)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='applications', null=True, blank=True)
 
     def __str__(self):
         return self.fullname

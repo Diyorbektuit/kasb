@@ -7,13 +7,13 @@ from rest_framework.filters import SearchFilter
 from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
-from settings.models import GeneralInformation
+from settings.models import GeneralInformation, Language
 from translations.models import Translation, Group
 
 
 # Create your views here.
 class LanguageListView(generics.ListAPIView):
-    queryset = models.Language.objects.all()
+    queryset = Language.objects.all()
     serializer_class = serializer.LanguageSerializer
 
 

@@ -31,8 +31,8 @@ class ApplicationInline(admin.TabularInline):
     model = Application
     extra = 0
     can_delete = False
-    fields = ('id', 'fullname', 'phone_number', 'email', 'extra_description')
-    readonly_fields = ('fullname', 'phone_number', 'email', 'extra_description')
+    fields = ('id', 'fullname', 'phone_number', 'email', )
+    readonly_fields = ('fullname', 'phone_number', 'email')
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -69,6 +69,5 @@ class VacancyAdmin(MultiLanguageAdmin):
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'fullname', 'phone_number', 'email', 'country', 'vacancy')
-    list_filter = ('country', 'vacancy')
     search_fields = ('fullname', 'phone_number', 'email')
 
