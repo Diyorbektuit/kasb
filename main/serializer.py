@@ -123,11 +123,18 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         fields = (
             'fullname',
+            'gender',
+            'marital_status',
+            'birthday_data',
+            'region',
             'phone_number',
             'email',
+            'languages',
             'country',
+            'job_type',
+            'experience',
+            'level_of_education',
             'vacancy',
-            'extra_description'
         )
 
 
