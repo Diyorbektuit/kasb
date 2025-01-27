@@ -5,7 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
 from main import models, serializer, pagination
-from vacancy.models import Vacancy, Application
+from posts.models import Post
+from vacancy.models import Vacancy
 from settings.models import GeneralInformation
 from translations.models import Translation, Group
 
@@ -43,12 +44,12 @@ class VacancyListView(generics.ListAPIView):
 
 
 class ApplicationCreateView(generics.CreateAPIView):
-    queryset = Application.objects.all()
+    queryset = models.Application.objects.all()
     serializer_class = serializer.ApplicationSerializer
 
 
 class PostListView(generics.ListAPIView):
-    queryset = models.Post.objects.all()
+    queryset = Post.objects.all()
     serializer_class = serializer.PostListSerializer
     pagination_class = pagination.VacancyPagination
 
@@ -71,7 +72,7 @@ class PostListView(generics.ListAPIView):
 
 
 class PostDetailView(generics.RetrieveAPIView):
-    queryset = models.Post.objects.all()
+    queryset = Post.objects.all()
     serializer_class = serializer.PostDetailSerializer
 
     def get_serializer_context(self):

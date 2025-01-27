@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from django.conf import settings
 
-from main.models import Post, Form
+from main.models import Form, Application
+from posts.models import Post
 from settings.models import Language, GeneralInformation
-from vacancy.models import Vacancy, Application
+from vacancy.models import Vacancy
 from translations.models import Translation, Group
 
 

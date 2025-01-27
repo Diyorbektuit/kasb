@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from main.admin import MultiLanguageAdmin
+from main.models import Application
 from vacancy import models
 from settings.models import Language
 
@@ -27,7 +28,7 @@ class DynamicVacancyLanguageInline(admin.StackedInline):
 
 # Vacancy Admin
 class ApplicationInline(admin.TabularInline):
-    model = models.Application
+    model = Application
     extra = 0
     can_delete = False
     fields = ('id', 'fullname', 'phone_number', 'email', 'extra_description')
@@ -59,14 +60,13 @@ class VacancyAdmin(MultiLanguageAdmin):
                 }
             )
             inlines.append(inline_class)
-        inlines.append(ApplicationInline, )
         return tuple(inlines)
 
     def get_translation_field_value(self, translation):
         return translation.title or "N/A"
 
 
-@admin.register(models.Application)
+@admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'fullname', 'phone_number', 'email', 'country', 'vacancy')
     list_filter = ('country', 'vacancy')

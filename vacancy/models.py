@@ -37,14 +37,3 @@ class VacancyLanguage(BaseModel):
     def __str__(self):
         return f"{self.language.name}, {self.title}"
 
-
-class Application(BaseModel):
-    fullname = models.CharField(max_length=256)
-    phone_number = models.CharField( max_length=512)
-    email = models.EmailField()
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='applications')
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='applications')
-    extra_description = models.TextField()
-
-    def __str__(self):
-        return self.fullname

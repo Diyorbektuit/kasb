@@ -28,7 +28,7 @@ class DynamicGeneralInformationLanguageInline(admin.StackedInline):
 
 @admin.register(models.Language)
 class LanguageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'code')
+    list_display = ('name', 'code')
 
 # Category Admin
 class CategoryLanguageInline(admin.TabularInline):

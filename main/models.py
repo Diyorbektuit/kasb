@@ -2,7 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
 
-from settings.models import Language
+from settings.models import Language, Country
+from vacancy.models import Vacancy
+
 
 # Create your models here.
 class BaseModel(models.Model):
@@ -15,28 +17,22 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Post(BaseModel):
-    poster = models.ImageField(upload_to='post_images')
-
-    def __str__(self):
-        return self.posts_languages.first().title if self.posts_languages.first().title is not None else str(self.id)
-
-
-class PostLanguage(BaseModel):
-    language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name='posts_languages')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='posts_languages')
-    title = models.CharField(max_length=512, null=True, blank=True)
-    short_description = models.TextField(null=True, blank=True)
-    text = RichTextUploadingField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.language.name}, {self.title}"
-
-
 class Form(BaseModel):
     fullname = models.CharField(max_length=512)
     phone_number = models.CharField(max_length=512)
     description = models.TextField()
+
+    def __str__(self):
+        return self.fullname
+
+
+class Application(BaseModel):
+    fullname = models.CharField(max_length=256)
+    phone_number = models.CharField( max_length=512)
+    email = models.EmailField()
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='applications')
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='applications')
+    extra_description = models.TextField()
 
     def __str__(self):
         return self.fullname

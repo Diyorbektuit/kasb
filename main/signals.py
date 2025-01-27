@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from main.models import Post, PostLanguage
+from posts.models import Post, PostLanguage
 from settings.models import (Country, Company, Category, CategoryLanguage, CompanyLanguage, CountryLanguage, Language ,
                              GeneralInformation, GeneralInformationLanguage)
 from vacancy.models import Vacancy, VacancyLanguage

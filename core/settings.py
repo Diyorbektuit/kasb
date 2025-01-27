@@ -44,6 +44,7 @@ CUSTOM_APPS = [
     'settings.apps.SettingsConfig',
     'vacancy.apps.VacancyConfig',
     'translations.apps.TranslationsConfig',
+    'posts.apps.PostsConfig',
 ]
 
 THIRD_PARTY_APPS = [

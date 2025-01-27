@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
 from main import models
+from posts.models import PostLanguage, Post
 from settings.models import Language
 
 # Register your models here.
@@ -48,7 +49,7 @@ class MultiLanguageAdmin(admin.ModelAdmin):
 
 
 class DynamicPostLanguageInline(admin.StackedInline):
-    model = models.PostLanguage
+    model = PostLanguage
     extra = 0
     can_delete = False
     fields = ['language', 'title', 'short_description', 'text']
@@ -68,7 +69,7 @@ class DynamicPostLanguageInline(admin.StackedInline):
 
 # Post Admin
 class PostLanguageInline(admin.StackedInline):
-    model = models.PostLanguage
+    model = PostLanguage
     extra = 1
     fields = ['language', 'title', 'short_description', 'text']
     readonly_fields = ['language']
@@ -79,10 +80,10 @@ class PostLanguageInline(admin.StackedInline):
     def has_add_permission(self, request, obj):
         return False
 
-@admin.register(models.Post)
+@admin.register(Post)
 class PostAdmin(MultiLanguageAdmin):
     list_display = ('id', 'poster')
-    translation_model = models.PostLanguage
+    translation_model = PostLanguage
     translation_fk_field = 'post'
     inlines = (PostLanguageInline, )
 
