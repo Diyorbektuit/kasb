@@ -26,7 +26,7 @@ class Vacancy(BaseModel):
 
 
 class VacancyLanguage(BaseModel):
-    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='vacancies_languages')
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name='vacancies_languages')
     vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT, related_name='vacancies_languages')
     title = models.CharField(max_length=512, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
