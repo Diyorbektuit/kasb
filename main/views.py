@@ -130,11 +130,11 @@ class TranslationView(generics.ListAPIView):
     def get_queryset(self):
         group = self.request.query_params.get("group", None)
         if group is None:
-            return self.queryset
+            return Translation.objects.all()
         group = Group.objects.filter(name=group)
         if group.exists():
-            return self.queryset.filter(group=group.first())
-        return self.queryset
+            return Translation.objects.filter(group=group.first())
+        return Translation.objects.all()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
