@@ -129,7 +129,8 @@ class TranslationView(generics.ListAPIView):
 
     def get_queryset(self):
         group = self.request.query_params.get("group", None)
-
+        if group is None:
+            return self.queryset
         group = Group.objects.filter(name=group)
         if group.exists():
             return self.queryset.filter(group=group.first())
