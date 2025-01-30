@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from main.admin import MultiLanguageAdmin
 from settings import models
@@ -69,10 +70,17 @@ class CompanyLanguageInline(admin.TabularInline):
 
 @admin.register(models.Company)
 class CompanyAdmin(MultiLanguageAdmin):
-    list_display = ('id', 'image')
+    list_display = ('id', 'display_image')
     translation_model = models.CompanyLanguage
     translation_fk_field = 'company'
     inlines = (CompanyLanguageInline, )
+
+    def display_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="100" height="auto" />', obj.image.url)
+        return "No image"
+
+    display_image.short_description = 'image'
 
 
 # Country Admin
@@ -90,12 +98,20 @@ class CountryLanguageInline(admin.TabularInline):
         return False
 
 
+
 @admin.register(models.Country)
 class CountryAdmin(MultiLanguageAdmin):
-    list_display = ('id', 'icon')
+    list_display = ('id', 'display_icon')
     translation_model = models.CountryLanguage
     translation_fk_field = 'country'
     inlines = (CountryLanguageInline, )
+
+    def display_icon(self, obj):
+        if obj.icon:
+            return format_html('<img src="{}" width="100" height="auto" />', obj.icon.url)
+        return "No Icon"
+
+    display_icon.short_description = 'Icon'
 
 
 # General Information

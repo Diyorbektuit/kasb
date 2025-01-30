@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, User
 from main import models
 from posts.models import PostLanguage, Post
 from settings.models import Language
+from django.utils.html import format_html
 
 # Register your models here.
 admin.site.unregister(Group)
@@ -82,7 +83,7 @@ class PostLanguageInline(admin.StackedInline):
 
 @admin.register(Post)
 class PostAdmin(MultiLanguageAdmin):
-    list_display = ('id', 'poster')
+    list_display = ('id', 'display_poster')
     translation_model = PostLanguage
     translation_fk_field = 'post'
     inlines = (PostLanguageInline, )
@@ -104,6 +105,12 @@ class PostAdmin(MultiLanguageAdmin):
     def get_translation_field_value(self, translation):
         return translation.title or "N/A"
 
+    def display_poster(self, obj):
+        if obj.poster:
+            return format_html('<img src="{}" width="100" height="auto" />', obj.poster.url)
+        return "No Poster"
+
+    display_poster.short_description = 'Poster'
 
 @admin.register(models.Form)
 class FormAdmin(admin.ModelAdmin):
