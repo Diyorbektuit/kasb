@@ -45,6 +45,7 @@ class TranslationAdmin(MultiLanguageAdmin):
     list_display = ('id', 'key')
     translation_model = models.TranslationLanguage
     translation_fk_field = 'translation'
+    list_editable = ('key', )
     inlines = (TranslationLanguageInline, )
     list_filter = ('group', )
     search_fields = ('key', )
