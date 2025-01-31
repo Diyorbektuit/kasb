@@ -43,6 +43,7 @@ class TranslationLanguageInline(admin.TabularInline):
 @admin.register(models.Translation)
 class TranslationAdmin(MultiLanguageAdmin):
     list_display = ('id', 'key')
+    list_per_page = 25
     translation_model = models.TranslationLanguage
     translation_fk_field = 'translation'
     list_editable = ('key', )
