@@ -94,3 +94,24 @@ class CountryLanguage(BaseModel):
 
     def __str__(self):
         return f"{self.language.name}, {self.name}"
+
+
+class ApplicationExperience(BaseModel):
+    value = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.value
+
+
+class ApplicationJobType(BaseModel):
+    value = models.CharField(max_length=512)
+
+    def __str__(self):
+        return self.value
+
+
+class ApplicationLanguage(BaseModel):
+    value = models.CharField(max_length=512)
+
+    def __str__(self):
+        return self.value

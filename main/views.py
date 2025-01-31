@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
-from settings.models import GeneralInformation, Language
-from translations.models import Translation, Group
+from settings.models import GeneralInformation, Language, ApplicationLanguage, ApplicationExperience, ApplicationJobType
+from translations.models import Group
 
 from collections.abc import Iterable
 
@@ -183,3 +183,18 @@ class TranslationView(APIView):
 class GroupListView(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = serializer.GroupSerializer
+
+
+class ApplicationLanguageView(generics.ListAPIView):
+    queryset = ApplicationLanguage.objects.all()
+    serializer_class = serializer.ApplicationLanguageSerializer
+
+
+class ApplicationExperienceView(generics.ListAPIView):
+    queryset = ApplicationExperience.objects.all()
+    serializer_class = serializer.ApplicationExperienceSerializer
+
+
+class ApplicationJobTypeView(generics.ListAPIView):
+    queryset = ApplicationJobType.objects.all()
+    serializer_class = serializer.ApplicationJobTypeSerializer

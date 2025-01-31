@@ -159,3 +159,17 @@ class GeneralInformationAdmin(MultiLanguageAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+
+@admin.register(models.ApplicationLanguage)
+class ApplicationLanguageAdmin(admin.ModelAdmin):
+    list_filter = ('value', )
+
+
+@admin.register(models.ApplicationExperience)
+class ApplicationExperienceAdmin(admin.ModelAdmin):
+    list_filter = ('value', )
+
+
+@admin.register(models.ApplicationJobType)
+class ApplicationJobTypeAdmin(admin.ModelAdmin):
+    list_filter = ('value', )

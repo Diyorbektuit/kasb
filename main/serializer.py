@@ -3,9 +3,9 @@ from django.conf import settings
 
 from main.models import Form, Application
 from posts.models import Post
-from settings.models import Language, GeneralInformation
+from settings.models import Language, GeneralInformation, ApplicationLanguage, ApplicationExperience, ApplicationJobType
 from vacancy.models import Vacancy
-from translations.models import Translation, Group
+from translations.models import Group
 
 
 # Language serializer
@@ -313,30 +313,33 @@ class GeneralInformationSerializer(serializers.ModelSerializer):
         )
 
 
-# Translations
-class TranslationsSerializer(serializers.ModelSerializer):
-    value = serializers.SerializerMethodField()
-
-    def get_value(self, obj):
-        code = self.context.get("language", None)
-        if code is not None:
-            translation_language = obj.languages.filter(language__code=code)
-            if translation_language.exists():
-                return translation_language.first().value
-            return None
-        return None
-
-    class Meta:
-        model = Translation
-        fields = (
-            'key',
-            'value'
-        )
-
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = (
             'name',
             'sub_text'
+        )
+
+
+class ApplicationLanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationLanguage
+        fields = (
+            'value',
+        )
+
+
+class ApplicationExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationExperience
+        fields = (
+            'value',
+        )
+
+class ApplicationJobTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationJobType
+        fields = (
+            'value',
         )
