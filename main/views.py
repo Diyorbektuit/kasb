@@ -1,14 +1,21 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import generics
+from rest_framework import generics, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
 from settings.models import GeneralInformation, Language
 from translations.models import Translation, Group
+
+from collections.abc import Iterable
+
+def is_iterable(obj):
+    return isinstance(obj, Iterable)
 
 
 # Create your views here.
@@ -123,23 +130,15 @@ class GeneralInformationView(generics.RetrieveAPIView):
         return super().get(request, *args, **kwargs)
 
 
-class TranslationView(generics.ListAPIView):
-    queryset = Translation.objects.all()
-    serializer_class = serializer.TranslationsSerializer
-
+class TranslationView(APIView):
     def get_queryset(self):
         group = self.request.query_params.get("group", None)
         if group is None:
-            return Translation.objects.all()
+            return Group.objects.all()
         group = Group.objects.filter(name=group)
         if group.exists():
-            return Translation.objects.filter(group=group.first())
-        return Translation.objects.all()
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context["language"] = self.request.query_params.get("language", None)
-        return context
+            return group.first()
+        return Group.objects.all()
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -157,7 +156,28 @@ class TranslationView(generics.ListAPIView):
             )
         ])
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        language = self.request.query_params.get('language', None)
+        if language is None or not Language.objects.filter(code=language).exists():
+            return Response(data={"msg": "language must be set"}, status=status.HTTP_400_BAD_REQUEST)
+        queryset = self.get_queryset()
+        if is_iterable(queryset):
+            group_data = {}
+            for group in queryset:
+                group_translations = dict()
+                for translation in group.translations.all():
+                    group_translations.update(
+                        {f"{translation.key}": translation.languages.filter(language__code=language).first().value})
+                group_data.update({f"{group.name}": group_translations})
+
+            return Response(data=group_data)
+
+        group_translations = dict()
+        for translation in queryset.translations.all():
+            group_translations.update(
+                {f"{translation.key}": translation.languages.filter(language__code=language).first().value})
+
+        return Response(data=group_translations)
+
 
 
 class GroupListView(generics.ListAPIView):
