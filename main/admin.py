@@ -12,9 +12,6 @@ admin.site.unregister(User)
 
 # Helper class to add dynamic language fields
 class MultiLanguageAdmin(admin.ModelAdmin):
-    """
-    Dinamik tillar uchun `list_display`ga ustunlarni qo'shish uchun yordamchi admin klass.
-    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,7 +20,6 @@ class MultiLanguageAdmin(admin.ModelAdmin):
             field_name = f'translation_{language.code}'
             self.list_display += (field_name,)
 
-            # Dinamik metod yaratish
             def lang_translation(obj, lang_code=language.code):
                 return self.get_translation(obj, lang_code)
 
@@ -31,21 +27,14 @@ class MultiLanguageAdmin(admin.ModelAdmin):
             setattr(self, field_name, lang_translation)
 
     def get_translation(self, obj, lang_code):
-        """
-        Tarjimani `language` va `obj` bo'yicha qaytaradi.
-        """
         try:
             translation_model = self.translation_model
-            translation = translation_model.objects.get(**{self.translation_fk_field: obj, 'language__code': lang_code})
+            translation = translation_model.objects.filter(**{self.translation_fk_field: obj, 'language__code': lang_code}).first()
             return self.get_translation_field_value(translation)
         except self.translation_model.DoesNotExist:
             return "N/A"
 
     def get_translation_field_value(self, translation):
-        """
-        Obyekt ichida qaysi qiymatni `list_display`da ko'rsatish.
-        Default: `value`, keyin `name`, keyin `title`.
-        """
         return getattr(translation, 'value', getattr(translation, 'name', getattr(translation, 'title', "N/A")))
 
 

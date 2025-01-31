@@ -29,6 +29,8 @@ class Translation(BaseModel):
     def __str__(self):
         return self.key
 
+    class Meta:
+        unique_together = ('group', 'key')
 
 class TranslationLanguage(BaseModel):
     translation = models.ForeignKey(Translation, on_delete=models.CASCADE, related_name='languages')
