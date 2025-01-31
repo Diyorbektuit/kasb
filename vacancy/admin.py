@@ -46,6 +46,7 @@ class VacancyAdmin(MultiLanguageAdmin):
     list_display = ('id', 'category', 'company', 'country', 'min_salary', 'max_salary')
     translation_model = models.VacancyLanguage
     translation_fk_field = 'vacancy'
+    translation_field = 'title'
     inlines = (ApplicationInline, )
 
     def get_inlines(self, request, obj=None):

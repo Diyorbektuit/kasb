@@ -1,9 +1,12 @@
+from unicodedata import category
+
 from rest_framework import serializers
 from django.conf import settings
 
 from main.models import Form, Application
 from posts.models import Post
-from settings.models import Language, GeneralInformation, ApplicationLanguage, ApplicationExperience, ApplicationJobType
+from settings.models import (Language, GeneralInformation, ApplicationLanguage, ApplicationExperience,
+                             ApplicationJobType, Category, Company)
 from vacancy.models import Vacancy
 from translations.models import Group
 
@@ -344,3 +347,41 @@ class ApplicationJobTypeSerializer(serializers.ModelSerializer):
         fields = (
             'value',
         )
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'name'
+        )
+
+    def get_name(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            category_language = obj.categories_languages.filter(language__code=code)
+            if category_language.exists():
+                return category_language.first().name
+            return None
+        return None
+
+
+class CompanyListSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Company
+        fields = (
+            'id',
+            'name'
+        )
+
+    def get_name(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            company_language = obj.companies_languages.filter(language__code=code)
+            if company_language.exists():
+                return company_language.first().name
+            return None
+        return None

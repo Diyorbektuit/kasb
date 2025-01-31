@@ -73,6 +73,7 @@ class CompanyAdmin(MultiLanguageAdmin):
     list_display = ('id', 'display_image')
     translation_model = models.CompanyLanguage
     translation_fk_field = 'company'
+    translation_field = 'name'
     inlines = (CompanyLanguageInline, )
 
     def display_image(self, obj):
@@ -104,6 +105,7 @@ class CountryAdmin(MultiLanguageAdmin):
     list_display = ('id', 'display_icon')
     translation_model = models.CountryLanguage
     translation_fk_field = 'country'
+    translation_field = 'name'
     inlines = (CountryLanguageInline, )
 
     def display_icon(self, obj):
@@ -134,6 +136,7 @@ class GeneralInformationAdmin(MultiLanguageAdmin):
     list_display = ('email', 'phone', 'telegram', 'instagram', 'facebook', 'youtube')
     translation_model = models.GeneralInformationLanguage
     translation_fk_field = 'general_information'
+    translation_field = 'headline'
     inlines = (GeneralInformationLanguageInline, )
 
     def get_inlines(self, request, obj=None):

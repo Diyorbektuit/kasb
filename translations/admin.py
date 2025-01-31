@@ -46,6 +46,7 @@ class TranslationAdmin(MultiLanguageAdmin):
     list_per_page = 10
     translation_model = models.TranslationLanguage
     translation_fk_field = 'translation'
+    translation_field = "value"
     list_editable = ('key', )
     inlines = (TranslationLanguageInline, )
     list_filter = ('group', )

@@ -12,6 +12,7 @@ admin.site.unregister(User)
 
 # Helper class to add dynamic language fields
 class MultiLanguageAdmin(admin.ModelAdmin):
+    translation_field = "value"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,7 +36,9 @@ class MultiLanguageAdmin(admin.ModelAdmin):
             return "N/A"
 
     def get_translation_field_value(self, translation):
-        return getattr(translation, 'value', getattr(translation, 'name', getattr(translation, 'title', "N/A")))
+        if not translation:
+            return "N/A"
+        return getattr(translation, self.translation_field, "N/A")
 
 
 class DynamicPostLanguageInline(admin.StackedInline):
@@ -74,6 +77,7 @@ class PostLanguageInline(admin.StackedInline):
 class PostAdmin(MultiLanguageAdmin):
     list_display = ('id', 'display_poster')
     translation_model = PostLanguage
+    translation_field = 'title'
     translation_fk_field = 'post'
     inlines = (PostLanguageInline, )
 
