@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 
 from posts.models import Post, PostLanguage
@@ -137,3 +137,8 @@ def create_category_languages_for_new_category(sender, instance, created, **kwar
                 language=language,
                 translation=instance,
             )
+
+@receiver(post_migrate)
+def create_default_settings(sender, **kwargs):
+    if len(GeneralInformation.objects.all()) == 0:
+        GeneralInformation.objects.create()

@@ -17,15 +17,19 @@ class MultiLanguageAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         languages = Language.objects.all()
-        for language in languages:
-            field_name = f'translation_{language.code}'
-            self.list_display += (field_name,)
+        try:
+            for language in languages:
+                field_name = f'translation_{language.code}'
+                self.list_display += (field_name,)
 
-            def lang_translation(obj, lang_code=language.code):
-                return self.get_translation(obj, lang_code)
+                def lang_translation(obj, lang_code=language.code):
+                    return self.get_translation(obj, lang_code)
 
-            lang_translation.short_description = f'{language.name} Translation'
-            setattr(self, field_name, lang_translation)
+                lang_translation.short_description = f'{language.name} Translation'
+                setattr(self, field_name, lang_translation)
+
+        except Exception as e:
+            print("Xatolik yuz berdi:", e)
 
     def get_translation(self, obj, lang_code):
         try:
