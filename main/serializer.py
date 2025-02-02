@@ -6,7 +6,7 @@ from django.conf import settings
 from main.models import Form, Application
 from posts.models import Post
 from settings.models import (Language, GeneralInformation, ApplicationLanguage, ApplicationExperience,
-                             ApplicationJobType, Category, Company)
+                             ApplicationJobType, Category, Company, Country)
 from vacancy.models import Vacancy
 from translations.models import Group
 
@@ -148,7 +148,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'fullname': instance.fullname,
             'phone_number': instance.phone_number,
             'email': instance.email,
-            'extra_description': instance.extra_description,
         }
 
 # Post Serializers
@@ -197,6 +196,28 @@ class PostDetailSerializer(serializers.ModelSerializer):
     text = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
     short_description = serializers.SerializerMethodField()
+    next = serializers.SerializerMethodField()
+    previous = serializers.SerializerMethodField()
+
+    def get_next(self, obj):
+        next_object = Post.objects.filter(id__gt=obj.id).order_by('id')
+        if next_object.exists():
+            return {
+                'id': next_object.first().id,
+                'title': next_object.first().title
+            }
+        else:
+            return None
+
+    def get_previous(self, obj):
+        previous_object = Post.objects.filter(id__lt=obj.id).order_by('id')
+        if previous_object.exists():
+            return {
+                'id': previous_object.first().id,
+                'title': previous_object.first().title
+            }
+        else:
+            return None
 
     def get_title(self, obj):
         code = self.context.get("language", None)
@@ -233,6 +254,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'poster',
             'short_description',
             'text',
+            'previous',
+            'next'
         )
 
 
@@ -383,5 +406,25 @@ class CompanyListSerializer(serializers.ModelSerializer):
             company_language = obj.companies_languages.filter(language__code=code)
             if company_language.exists():
                 return company_language.first().name
+            return None
+        return None
+
+
+class CountryListSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Country
+        fields = (
+            'id',
+            'name'
+        )
+
+    def get_name(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            countries_languages = obj.countries_languages.filter(language__code=code)
+            if countries_languages.exists():
+                return countries_languages.first().name
             return None
         return None

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
@@ -10,7 +11,7 @@ from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
 from settings.models import GeneralInformation, Language, ApplicationLanguage, ApplicationExperience, \
-    ApplicationJobType, Company, Category
+    ApplicationJobType, Company, Category, Country
 from translations.models import Group
 
 from collections.abc import Iterable
@@ -38,6 +39,17 @@ class VacancyListView(generics.ListAPIView):
         context["language"] = self.request.query_params.get("language", None)
         return context
 
+    def get_queryset(self):
+        max_price = self.request.query_params.get("max_price", None)
+        min_price = self.request.query_params.get("min_price", None)
+        filters = Q()
+        if min_price is not None:
+            filters &= Q(max_price__lte=max_price)
+        if max_price is not None:
+            filters &= Q(max_price__gte=max_price)
+
+        return self.queryset.filter(filters)
+
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
@@ -45,6 +57,18 @@ class VacancyListView(generics.ListAPIView):
                 openapi.IN_QUERY,
                 description="language codeni yozasiz",
                 type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                'min_price',
+                openapi.IN_QUERY,
+                description="min price",
+                type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
+                'max_price',
+                openapi.IN_QUERY,
+                description="max price",
+                type=openapi.TYPE_INTEGER
             )
         ])
     def get(self, request, *args, **kwargs):
@@ -225,6 +249,28 @@ class CompanyListView(generics.ListAPIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = serializer.CategoryListSerializer
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'language',
+                openapi.IN_QUERY,
+                description="language codeni yozasiz",
+                type=openapi.TYPE_STRING
+            )
+        ])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("language", None)
+        return context
+
+
+class CountryListView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = serializer.CountryListSerializer
 
     @swagger_auto_schema(
         manual_parameters=[
