@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from core.schema import swagger_urlpatterns
 
 urlpatterns = [
-    path('', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('api/main/', include('main.urls')),
     path('api/settings/', include('settings.urls')),
     path('api/vacancy/', include('vacancy.urls')),
