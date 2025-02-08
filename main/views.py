@@ -57,7 +57,7 @@ class VacancyListView(generics.ListAPIView):
             except ValueError:
                 pass
 
-        return self.queryset.filter(filters)
+        return Vacancy.objects.filter(filters)
 
     @swagger_auto_schema(
         manual_parameters=[
