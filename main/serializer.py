@@ -204,7 +204,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         if next_object.exists():
             return {
                 'id': next_object.first().id,
-                'title': next_object.first().title
+                'title': self.get_title(next_object.first())
             }
         else:
             return None
@@ -214,7 +214,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         if previous_object.exists():
             return {
                 'id': previous_object.first().id,
-                'title': previous_object.first().title
+                'title': self.get_title(previous_object.first())
             }
         else:
             return None

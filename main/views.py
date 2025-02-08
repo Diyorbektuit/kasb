@@ -44,9 +44,9 @@ class VacancyListView(generics.ListAPIView):
         min_price = self.request.query_params.get("min_price", None)
         filters = Q()
         if min_price is not None:
-            filters &= Q(max_price__lte=max_price)
+            filters &= Q(min_salary__lte=max_price)
         if max_price is not None:
-            filters &= Q(max_price__gte=max_price)
+            filters &= Q(max_salary__gte=max_price)
 
         return self.queryset.filter(filters)
 
