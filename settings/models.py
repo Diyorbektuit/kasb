@@ -97,7 +97,7 @@ class CountryLanguage(BaseModel):
 
 
 class FAQ(BaseModel):
-    key = models.TextField(unique=True)
+    key = models.CharField(max_length=512, unique=True)
 
     def __str__(self):
         return self.key
@@ -110,6 +110,9 @@ class FAQLanguage(BaseModel):
 
     def __str__(self):
         return f"{self.language.name}, {self.value}"
+
+    class Meta:
+        unique_together = ('language', 'faq')
 
 
 class ApplicationExperience(BaseModel):
