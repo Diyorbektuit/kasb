@@ -11,7 +11,7 @@ from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
 from settings.models import GeneralInformation, Language, ApplicationLanguage, ApplicationExperience, \
-    ApplicationJobType, Company, Category, Country
+    ApplicationJobType, Company, Category, Country, FAQ
 from translations.models import Group
 
 from collections.abc import Iterable
@@ -258,6 +258,28 @@ class CompanyListView(generics.ListAPIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = serializer.CategoryListSerializer
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'language',
+                openapi.IN_QUERY,
+                description="language codeni yozasiz",
+                type=openapi.TYPE_STRING
+            )
+        ])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("language", None)
+        return context
+
+
+class FAQListView(generics.ListAPIView):
+    queryset = FAQ.objects.all()
+    serializer_class = serializer.FAqListSerializer
 
     @swagger_auto_schema(
         manual_parameters=[

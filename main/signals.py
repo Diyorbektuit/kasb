@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from posts.models import Post, PostLanguage
 from settings.models import (Country, Company, Category, CategoryLanguage, CompanyLanguage, CountryLanguage, Language ,
-                             GeneralInformation, GeneralInformationLanguage)
+                             GeneralInformation, GeneralInformationLanguage, FAQ, FAQLanguage)
 from vacancy.models import Vacancy, VacancyLanguage
 from translations.models import Translation, TranslationLanguage
 
@@ -15,6 +15,7 @@ def create_category_languages(sender, instance, created, **kwargs):
         companies = Company.objects.all()
         countries = Country.objects.all()
         vacancies = Vacancy.objects.all()
+        faqs = FAQ.objects.all()
         posts = Post.objects.all()
         translations = Translation.objects.all()
 
@@ -36,6 +37,12 @@ def create_category_languages(sender, instance, created, **kwargs):
             CategoryLanguage.objects.create(
                 language=instance,
                 category=category,
+            )
+
+        for faq in faqs:
+            FAQLanguage.objects.create(
+                language=instance,
+                faq=faq,
             )
 
         for company in companies:
@@ -71,6 +78,17 @@ def create_category_languages_for_new_category(sender, instance, created, **kwar
             CategoryLanguage.objects.create(
                 language=language,
                 category=instance,
+            )
+
+
+@receiver(post_save, sender=FAQ)
+def create_faq_languages_for_new_faq(sender, instance, created, **kwargs):
+    if created:
+        languages = Language.objects.all()
+        for language in languages:
+            FAQLanguage.objects.create(
+                language=language,
+                faq=instance,
             )
 
 

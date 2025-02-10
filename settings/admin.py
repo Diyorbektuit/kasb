@@ -54,6 +54,29 @@ class CategoryAdmin(MultiLanguageAdmin):
     inlines = (CategoryLanguageInline, )
 
 
+# FAQ Admin
+class FAQLanguageInline(admin.TabularInline):
+    model = models.FAQLanguage
+    extra = 0
+    can_delete = False
+    fields = ('language', 'value',)
+    readonly_fields = ('language',)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(models.FAQ)
+class FAQAdmin(MultiLanguageAdmin):
+    list_display = ('id', 'key')
+    translation_model = models.FAQLanguage
+    translation_fk_field = 'faq'
+    inlines = (FAQLanguageInline, )
+
+
 # Company Admin
 class CompanyLanguageInline(admin.TabularInline):
     model = models.CompanyLanguage

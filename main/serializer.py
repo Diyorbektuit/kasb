@@ -6,7 +6,7 @@ from django.conf import settings
 from main.models import Form, Application
 from posts.models import Post
 from settings.models import (Language, GeneralInformation, ApplicationLanguage, ApplicationExperience,
-                             ApplicationJobType, Category, Company, Country)
+                             ApplicationJobType, Category, Company, Country, FAQ, FAQLanguage)
 from vacancy.models import Vacancy
 from translations.models import Group
 
@@ -386,6 +386,26 @@ class CategoryListSerializer(serializers.ModelSerializer):
             category_language = obj.categories_languages.filter(language__code=code)
             if category_language.exists():
                 return category_language.first().name
+            return None
+        return None
+
+
+class FAqListSerializer(serializers.ModelSerializer):
+    value = serializers.SerializerMethodField()
+    class Meta:
+        model = FAQ
+        fields = (
+            'id',
+            'key',
+            'value',
+        )
+
+    def get_value(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            faq_language = obj.faqs_languages.filter(language__code=code)
+            if faq_language.exists():
+                return faq_language.first().value
             return None
         return None
 

@@ -6,6 +6,7 @@ urlpatterns = [
     path('categories/', views.CategoryListView.as_view()),
     path('countries/', views.CountryListView.as_view()),
     path('languages/', views.LanguageListView.as_view()),
+    path('faqs/', views.FAQListView.as_view()),
     path('vacancies/', views.VacancyListView.as_view()),
     path('application/', views.ApplicationCreateView.as_view()),
     path('posts/', views.PostListView.as_view()),

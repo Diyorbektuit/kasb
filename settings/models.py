@@ -96,6 +96,22 @@ class CountryLanguage(BaseModel):
         return f"{self.language.name}, {self.name}"
 
 
+class FAQ(BaseModel):
+    key = models.CharField(unique=True, max_length=2056)
+
+    def __str__(self):
+        return self.key
+
+
+class FAQLanguage(BaseModel):
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name='faqs_languages')
+    faq = models.ForeignKey(FAQ, on_delete=models.CASCADE, related_name='faqs_languages')
+    value = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.language.name}, {self.value}"
+
+
 class ApplicationExperience(BaseModel):
     value = models.CharField(max_length=256)
 
