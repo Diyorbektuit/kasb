@@ -59,7 +59,7 @@ class FAQLanguageInline(admin.TabularInline):
     model = models.FAQLanguage
     extra = 0
     can_delete = False
-    fields = ('language', 'value',)
+    fields = ('language', 'title', 'value')
     readonly_fields = ('language',)
 
     def has_add_permission(self, request, obj=None):

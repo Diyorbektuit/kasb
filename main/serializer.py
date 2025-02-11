@@ -392,12 +392,14 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
 class FAqListSerializer(serializers.ModelSerializer):
     value = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
     class Meta:
         model = FAQ
         fields = (
             'id',
             'key',
             'value',
+            'title',
         )
 
     def get_value(self, obj):
@@ -406,6 +408,16 @@ class FAqListSerializer(serializers.ModelSerializer):
             faq_language = obj.faqs_languages.filter(language__code=code)
             if faq_language.exists():
                 return faq_language.first().value
+            return None
+        return None
+
+
+    def get_title(self, obj):
+        code = self.context.get("language", None)
+        if code is not None:
+            faq_language = obj.faqs_languages.filter(language__code=code)
+            if faq_language.exists():
+                return faq_language.first().title
             return None
         return None
 

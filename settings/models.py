@@ -106,6 +106,7 @@ class FAQ(BaseModel):
 class FAQLanguage(BaseModel):
     language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name='faqs_languages')
     faq = models.ForeignKey(FAQ, on_delete=models.CASCADE, related_name='faqs_languages')
+    title = models.TextField(null=True, blank=True)
     value = models.TextField(null=True, blank=True)
 
     def __str__(self):
