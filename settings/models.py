@@ -97,7 +97,7 @@ class CountryLanguage(BaseModel):
 
 
 class FAQ(BaseModel):
-    key = models.CharField(max_length=512, unique=True)
+    key = models.CharField(max_length=2048)
 
     def __str__(self):
         return self.key
