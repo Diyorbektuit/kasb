@@ -31,6 +31,19 @@ class DynamicGeneralInformationLanguageInline(admin.StackedInline):
 class LanguageAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
 
+
+@admin.register(models.Banner)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'display_image')
+
+    def display_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="100" height="auto" />', obj.image.url)
+        return "No image"
+
+    display_image.short_description = 'image'
+
+
 # Category Admin
 class CategoryLanguageInline(admin.TabularInline):
     model = models.CategoryLanguage

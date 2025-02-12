@@ -6,7 +6,7 @@ from django.conf import settings
 from main.models import Form, Application
 from posts.models import Post
 from settings.models import (Language, GeneralInformation, ApplicationLanguage, ApplicationExperience,
-                             ApplicationJobType, Category, Company, Country, FAQ, FAQLanguage)
+                             ApplicationJobType, Category, Company, Country, FAQ, Banner)
 from vacancy.models import Vacancy
 from translations.models import Group
 
@@ -440,6 +440,15 @@ class CompanyListSerializer(serializers.ModelSerializer):
                 return company_language.first().name
             return None
         return None
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = (
+            'id',
+            'image',
+        )
 
 
 class CountryListSerializer(serializers.ModelSerializer):

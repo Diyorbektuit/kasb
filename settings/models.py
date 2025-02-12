@@ -21,6 +21,13 @@ class Language(BaseModel):
         return self.name
 
 
+class Banner(BaseModel):
+    image = models.ImageField(upload_to='banners/')
+
+    def __str__(self):
+        return str(self.id)
+
+
 class GeneralInformation(BaseModel):
     email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=512, null=True, blank=True)
@@ -135,3 +142,4 @@ class ApplicationLanguage(BaseModel):
 
     def __str__(self):
         return self.value
+

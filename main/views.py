@@ -11,7 +11,7 @@ from main import models, serializer, pagination
 from posts.models import Post
 from vacancy.models import Vacancy
 from settings.models import GeneralInformation, Language, ApplicationLanguage, ApplicationExperience, \
-    ApplicationJobType, Company, Category, Country, FAQ
+    ApplicationJobType, Company, Category, Country, FAQ, Banner
 from translations.models import Group
 
 from collections.abc import Iterable
@@ -297,6 +297,11 @@ class FAQListView(generics.ListAPIView):
         context = super().get_serializer_context()
         context["language"] = self.request.query_params.get("language", None)
         return context
+
+
+class BannersListView(generics.ListAPIView):
+    queryset = Banner.objects.all()
+    serializer_class = serializer.BannerSerializer
 
 
 class CountryListView(generics.ListAPIView):
