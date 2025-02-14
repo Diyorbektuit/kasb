@@ -18,8 +18,8 @@ class Vacancy(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="vacancies")
     company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="vacancies")
     country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='vacancies')
-    min_salary = models.IntegerField()
-    max_salary = models.IntegerField()
+    min_salary = models.IntegerField(null=True, blank=True)
+    max_salary = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.vacancies_languages.first().title if self.vacancies_languages.first().title is not None else str(self.id)

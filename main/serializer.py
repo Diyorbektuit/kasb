@@ -6,7 +6,7 @@ from django.conf import settings
 from main.models import Form, Application
 from posts.models import Post
 from settings.models import (Language, GeneralInformation, ApplicationLanguage, ApplicationExperience,
-                             ApplicationJobType, Category, Company, Country, FAQ, Banner)
+                             ApplicationJobType, Category, Company, Country, FAQ, Banner, CompanyLanguage)
 from vacancy.models import Vacancy
 from translations.models import Group
 
@@ -22,6 +22,20 @@ class LanguageSerializer(serializers.ModelSerializer):
         )
 
 # Vacancy serializer
+class CompanyLanguageSerializerForVacancy(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        return obj.company.image.url
+
+    class Meta:
+        model = CompanyLanguage
+        fields = (
+            'name',
+            'image'
+        )
+
+
 class VacancySerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     company = serializers.SerializerMethodField()
@@ -46,7 +60,10 @@ class VacancySerializer(serializers.ModelSerializer):
         if code is not None:
             company_language = obj.company.companies_languages.filter(language__code=code)
             if company_language.exists():
-                return company_language.first().name
+                return {
+                    "image": f"{settings.HOST_URL}/media/{company_language.first().company.image}",
+                    "name": company_language.first().name
+                }
             return None
         return None
 
