@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import environ
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,7 +25,7 @@ env.read_env(".env")
 
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env.str("SECRET_KEY")
-HOST_URL = env.str('HOST_URL', default='https://kasb001.pythonanywhere.com/')
+HOST_URL = env.str('HOST_URL')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -101,7 +104,14 @@ DATABASES = {
         "USER": env("MYSQL_USER"),
         "PASSWORD": env("MYSQL_PASS"),
         "PORT": "3306",
-    }
+    },
+    'OPTIONS': {
+        'ssl': {
+            'ca': '/path/to/ca.pem',
+            'cert': '/path/to/client-cert.pem',
+            'key': '/path/to/client-key.pem',
+        },
+    },
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
