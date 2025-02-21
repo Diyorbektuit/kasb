@@ -20,6 +20,7 @@ class Vacancy(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='vacancies')
     min_salary = models.IntegerField(null=True, blank=True)
     max_salary = models.IntegerField(null=True, blank=True)
+    currency = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
         return self.vacancies_languages.first().title if self.vacancies_languages.first().title is not None else str(self.id)

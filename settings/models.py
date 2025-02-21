@@ -72,7 +72,7 @@ class CategoryLanguage(BaseModel):
 
 
 class Company(BaseModel):
-    image = models.ImageField(upload_to='company_images')
+    image = models.ImageField(upload_to='company_images', null=True, blank=True)
 
     def __str__(self):
         return self.companies_languages.first().name if self.companies_languages.first().name is not None else str(self.id)
